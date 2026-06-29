@@ -108,8 +108,11 @@ export function GoogleSignInButton() {
               >
                 Supabase → URL Configuration
               </a>
-              {" "}→ add redirect URL:
-              <code className="mt-1 block rounded bg-black/30 px-2 py-1 text-xs text-white">
+              {" "}→ set <strong>Site URL</strong> to your live app URL and add redirect URLs:
+              <code className="mt-1 block break-all rounded bg-black/30 px-2 py-1 text-xs text-white">
+                https://your-app.onrender.com/auth/callback
+              </code>
+              <code className="mt-1 block break-all rounded bg-black/30 px-2 py-1 text-xs text-white">
                 http://localhost:3000/auth/callback
               </code>
             </li>
