@@ -1,5 +1,5 @@
-# Deploy the FastAPI backend on Render: https://render.com
-# Connect this repo → New Blueprint → uses this file.
+# Render Blueprint — frontend + API for AI Content Tracker
+# Dashboard → New → Blueprint → connect this repo
 services:
   - type: web
     name: ai-content-tracker-api
@@ -7,6 +7,7 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.9"
@@ -17,4 +18,31 @@ services:
       - key: ENCRYPTION_KEY
         sync: false
       - key: ALLOWED_ORIGINS
+        fromService:
+          type: web
+          name: ai-content-tracker-web
+          envVarKey: RENDER_EXTERNAL_URL
+
+  - type: web
+    name: ai-content-tracker-web
+    runtime: node
+    plan: free
+    rootDir: web
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SUPABASE_URL
         sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: NEXT_PUBLIC_GOOGLE_AUTH_ENABLED
+        value: "true"
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: ai-content-tracker-api
+          envVarKey: RENDER_EXTERNAL_URL
