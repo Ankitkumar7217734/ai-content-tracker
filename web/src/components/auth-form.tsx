@@ -2,13 +2,11 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { GoogleSignInButton } from "@/components/google-sign-in-button";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Tab = "signin" | "signup";
 
 export function AuthForm() {
-  const router = useRouter();
   const [tab, setTab] = useState<Tab>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,8 +37,7 @@ export function AuthForm() {
         if (signUpError) throw signUpError;
 
         if (data.session) {
-          router.push("/dashboard");
-          router.refresh();
+          window.location.assign("/dashboard");
           return;
         }
 
@@ -61,8 +58,8 @@ export function AuthForm() {
       if (signInError) throw signInError;
 
       if (data.session) {
-        router.push("/dashboard");
-        router.refresh();
+        window.location.assign("/dashboard");
+        return;
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed");
